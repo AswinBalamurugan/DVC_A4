@@ -1,0 +1,33 @@
+global:
+  YYYY: 2023
+  download_dir: 'ncei_data'
+  # Define the concerned monthly averages column for selecting the csv files
+  filter_cols:
+    - MonthlyAverageRH
+    - MonthlyDewpointTemperature
+    - MonthlySeaLevelPressure
+    - MonthlyStationPressure
+    - MonthlyWetBulb
+  # Corresponding hourly columns
+  hourly_cols : 
+    - HourlyRelativeHumidity
+    - HourlyDewPointTemperature
+    - HourlySeaLevelPressure
+    - HourlyStationPressure
+    - HourlyWetBulbTemperature
+
+download:
+  num_files_to_fetch: 2
+  # Define base URL, download directory and the downloaded html file's name
+  base_url: https://www.ncei.noaa.gov/data/local-climatological-data/access/2023/
+  html_filename: ncei_data_2023.html
+
+prepare:
+  gt_dir: 
+    - data
+    - gt
+
+process:
+  calc_dir: 
+    - data
+    - calculated

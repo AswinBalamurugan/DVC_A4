@@ -1,0 +1,22 @@
+dvc stage add -f \
+-n download \
+-d download.py \
+-p global.YYYY \
+-p global.download_dir \
+-p global.filter_cols \
+-p download.html_filename \
+-p download.num_files_to_fetch \
+-p download.base_url \
+-o ncei_data
+python download.py
+
+dvc stage add -f \
+-n prepare \
+-d prepare.py -d ncei_data \
+-p global.YYYY \
+-p global.download_dir \
+-p global.hourly_cols \
+-p global.filter_cols \
+-p prepare.gt_dir \
+-o data
+python prepare.py
