@@ -6,7 +6,7 @@ stages:
     params:
     - download.base_url
     - download.html_filename
-    - download.num_files_to_fetch
+    - download.n_locs
     - global.YYYY
     - global.download_dir
     - global.filter_cols
@@ -40,8 +40,9 @@ stages:
   evaluate:
     cmd: python evaluate.py
     deps:
-    - data
     - evaluate.py
     params:
     - global.filter_cols
     - prepare.gt_dir
+    outs:
+    - R2results.csv

@@ -5,7 +5,7 @@ dvc stage add -f \
 -p global.download_dir \
 -p global.filter_cols \
 -p download.html_filename \
--p download.num_files_to_fetch \
+-p download.n_locs \
 -p download.base_url \
 -o ncei_data/ \
 python download.py
@@ -33,7 +33,8 @@ python process.py
 
 dvc stage add -f \
 -n evaluate \
--d evaluate.py -d data \
+-d evaluate.py \
 -p global.filter_cols \
 -p prepare.gt_dir \
+-o R2results.csv \
 python evaluate.py

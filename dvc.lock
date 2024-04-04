@@ -1,0 +1,121 @@
+schema: '2.0'
+stages:
+  download:
+    cmd: python download.py
+    deps:
+    - path: download.py
+      hash: md5
+      md5: 770b3f3fbc9b737271d72b792443465d
+      size: 3381
+    params:
+      params.yaml:
+        download.base_url: https://www.ncei.noaa.gov/data/local-climatological-data/access/2023/
+        download.html_filename: ncei_data.html
+        download.n_locs: 2
+        global.YYYY: 2023
+        global.download_dir: ncei_data
+        global.filter_cols:
+        - MonthlyAverageRH
+        - MonthlyDewpointTemperature
+        - MonthlySeaLevelPressure
+        - MonthlyStationPressure
+        - MonthlyWetBulb
+    outs:
+    - path: ncei_data/
+      hash: md5
+      md5: d43d7e52a5bd85d4123a2cb3e720c5cd.dir
+      size: 16178950
+      nfiles: 2
+  prepare:
+    cmd: python prepare.py
+    deps:
+    - path: ncei_data
+      hash: md5
+      md5: d43d7e52a5bd85d4123a2cb3e720c5cd.dir
+      size: 16178950
+      nfiles: 2
+    - path: prepare.py
+      hash: md5
+      md5: 3f7707321a2d76e30bb80023634c5a74
+      size: 1221
+    params:
+      params.yaml:
+        global.YYYY: 2023
+        global.download_dir: ncei_data
+        global.filter_cols:
+        - MonthlyAverageRH
+        - MonthlyDewpointTemperature
+        - MonthlySeaLevelPressure
+        - MonthlyStationPressure
+        - MonthlyWetBulb
+        global.hourly_cols:
+        - HourlyRelativeHumidity
+        - HourlyDewPointTemperature
+        - HourlySeaLevelPressure
+        - HourlyStationPressure
+        - HourlyWetBulbTemperature
+        prepare.gt_dir:
+        - data
+        - gt
+    outs:
+    - path: data/gt
+      hash: md5
+      md5: 8a2f811d681d8058a08d11340eed7a03.dir
+      size: 407
+      nfiles: 2
+  process:
+    cmd: python process.py
+    deps:
+    - path: ncei_data
+      hash: md5
+      md5: d43d7e52a5bd85d4123a2cb3e720c5cd.dir
+      size: 16178950
+      nfiles: 2
+    - path: process.py
+      hash: md5
+      md5: fb12447e19468c1ed98523d6d6fab82a
+      size: 1905
+    params:
+      params.yaml:
+        global.download_dir: ncei_data
+        global.hourly_cols:
+        - HourlyRelativeHumidity
+        - HourlyDewPointTemperature
+        - HourlySeaLevelPressure
+        - HourlyStationPressure
+        - HourlyWetBulbTemperature
+        prepare.gt_dir:
+        - data
+        - gt
+        process.calc_dir:
+        - data
+        - calculated
+    outs:
+    - path: data/calculated
+      hash: md5
+      md5: a7cb523bacd70481dcbcbcc9762ef63c.dir
+      size: 1050
+      nfiles: 2
+  evaluate:
+    cmd: python evaluate.py
+    deps:
+    - path: evaluate.py
+      hash: md5
+      md5: fb35cf83d85be3e6af367fddc69168e8
+      size: 1315
+    params:
+      params.yaml:
+        global.filter_cols:
+        - MonthlyAverageRH
+        - MonthlyDewpointTemperature
+        - MonthlySeaLevelPressure
+        - MonthlyStationPressure
+        - MonthlyWetBulb
+        prepare.gt_dir:
+        - data
+        - gt
+    outs:
+    - path: R2results.csv
+      hash: md5
+      md5: 086b6955c4c6fcd1c43316a32f219cc6
+      size: 154
