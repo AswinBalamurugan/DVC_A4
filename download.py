@@ -1,4 +1,4 @@
-import os, re, random
+import os, re, random, requests
 import yaml
 import pandas as pd
 params_global = yaml.safe_load(open('params.yaml'))['global']
@@ -11,8 +11,11 @@ download_dir = params_global['download_dir']
 filter_cols = params_global['filter_cols']
 
 html_filename = params['html_filename']
-num_files_to_fetch = params['num_files_to_fetch']
+n_locs = params['n_locs']
 base_url = params['base_url']
+seed_value = params['seed']
+
+random.seed(seed_value)
 
 ################################################ FETCH PAGE ################################################
 # Fetch page and save to a file
@@ -40,15 +43,23 @@ csv_names = extract_csv_names(html_filename)
 def fetch_data_files(base_url, download_dir, csv_file_names, num_files, monthly_cols):
     """Fetches individual data files from the base URL."""
     i = 1
-    csv_file_names = [name for name in csv_file_names if name.startswith('99999')]
+    csv_file_names = [name for name in csv_file_names if name.endswith('.csv')]
     while num_files:
-        csv_names = random.sample(csv_file_names, 5)
+
+        # csv_names = random.sample(csv_file_names, 10) # Uncomment this line for automated file search
+        csv_names = ['72506794720.csv','99999963871.csv'] # This line is only to speed up the process
+        
         os.makedirs(download_dir, exist_ok=True)  # Create directory if it doesn't exist
-        command = ''
         for filename in csv_names:
             download_path = os.path.join(download_dir, filename)
-            command += f"curl -s -o {download_path} {base_url}{filename}; "
-        os.system(command)
+            url = f"{base_url}{filename}"
+            response = requests.get(url, stream=True)
+            response.raise_for_status()  # Raise exception for non-200 status codes
+
+            # Open the download file in write binary mode
+            with open(download_path, 'wb') as f:
+                for chunk in response.iter_content(1024):
+                    f.write(chunk)
 
         # Check if the condition holds for the downloaded file
         for filename in csv_names:
@@ -60,12 +71,12 @@ def fetch_data_files(base_url, download_dir, csv_file_names, num_files, monthly_
             else:
                 os.remove(download_path)  # Remove the file if condition is not met
         
-        print(f'Samples from batch {i} done! Found {2-num_files} files.')
+        print(f'Samples from batch {i} done! Found {2-num_files} file(s).')
         i += 1
 
     if num_files != 0:
         print('Change the year and retry!!')
 
 # Fetch individual data files
-fetch_data_files(base_url, download_dir, csv_names, num_files_to_fetch, filter_cols)
+fetch_data_files(base_url, download_dir, csv_names, n_locs, filter_cols)
 os.remove(html_filename)

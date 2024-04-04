@@ -1,11 +1,9 @@
 import os, yaml
 import pandas as pd
-import numpy as np
 import warnings
 from sklearn.metrics import r2_score
 warnings.filterwarnings('ignore')
 
-params_global = yaml.safe_load(open('params.yaml'))['global']
 params = yaml.safe_load(open('params.yaml'))
 
 ################################################ Variables ################################################
@@ -14,7 +12,7 @@ calc_dir = os.path.join(*params['process']['calc_dir'])
 gt_csvs = [file for file in sorted(os.listdir(gt_dir)) if file.endswith('.csv')]
 calc_csvs = [file for file in sorted(os.listdir(calc_dir)) if file.endswith('.csv')]
 
-overall_r2 = []
+r2_df = pd.DataFrame(columns=pd.read_csv(os.path.join(gt_dir, gt_csvs[0])).columns[1:])
 for gt,calc in zip(gt_csvs,calc_csvs):
 
     GT_df = pd.read_csv( os.path.join(gt_dir,gt))
@@ -29,8 +27,6 @@ for gt,calc in zip(gt_csvs,calc_csvs):
     for col_num in range(1,len(GT_df_wo_na.columns)):
         r2_scores.append(r2_score(GT_df_wo_na.iloc[:,col_num], calc_avgs_wo_na.iloc[:,col_num]))
 
-    overall_r2.append(np.mean(r2_scores))
-
-final_r2 = np.mean(overall_r2)
-print(final_r2)
+    r2_df.loc[calc] = r2_scores
+r2_df.to_csv('R2results.csv')
 os.system(f'rm -rf data')

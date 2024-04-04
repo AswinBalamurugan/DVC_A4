@@ -17,7 +17,8 @@ global:
     - HourlyWetBulbTemperature
 
 download:
-  num_files_to_fetch: 2
+  n_locs: 2
+  seed: 6
   # Define base URL, download directory and the downloaded html file's name
   base_url: https://www.ncei.noaa.gov/data/local-climatological-data/access/2023/
   html_filename: ncei_data_2023.html

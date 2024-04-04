@@ -7,7 +7,7 @@ dvc stage add -f \
 -p download.html_filename \
 -p download.num_files_to_fetch \
 -p download.base_url \
--o ncei_data
+-o ncei_data/ \
 python download.py
 
 dvc stage add -f \
@@ -18,5 +18,22 @@ dvc stage add -f \
 -p global.hourly_cols \
 -p global.filter_cols \
 -p prepare.gt_dir \
--o data
+-o data/gt \
 python prepare.py
+
+dvc stage add -f \
+-n process \
+-d process.py -d ncei_data \
+-p global.download_dir \
+-p global.hourly_cols \
+-p prepare.gt_dir \
+-p process.calc_dir \
+-o data/calculated \
+python process.py
+
+dvc stage add -f \
+-n evaluate \
+-d evaluate.py -d data \
+-p global.filter_cols \
+-p prepare.gt_dir \
+python evaluate.py
