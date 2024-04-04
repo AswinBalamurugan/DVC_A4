@@ -29,4 +29,3 @@ for gt,calc in zip(gt_csvs,calc_csvs):
 
     r2_df.loc[calc] = r2_scores
 r2_df.to_csv('R2results.csv')
-os.system(f'rm -rf data')

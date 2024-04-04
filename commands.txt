@@ -33,7 +33,7 @@ python process.py
 
 dvc stage add -f \
 -n evaluate \
--d evaluate.py \
+-d evaluate.py -d data \
 -p global.filter_cols \
 -p prepare.gt_dir \
 -o R2results.csv \

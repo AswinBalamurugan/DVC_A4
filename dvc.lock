@@ -99,10 +99,15 @@ stages:
   evaluate:
     cmd: python evaluate.py
     deps:
+    - path: data
+      hash: md5
+      md5: ec0ab13c33014c5d3bff3c9c5f2372f3.dir
+      size: 1457
+      nfiles: 4
     - path: evaluate.py
       hash: md5
-      md5: fb35cf83d85be3e6af367fddc69168e8
-      size: 1315
+      md5: 44ba96c1bad09c135b067d08dae0abc4
+      size: 1289
     params:
       params.yaml:
         global.filter_cols:
