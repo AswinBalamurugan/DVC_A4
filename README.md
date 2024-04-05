@@ -14,6 +14,7 @@ The NCEI also provides archive services for much of the data collected by NOAA s
 # Setup
 Go to the working directory in the terminal/command prompt and initialise dvc and git using `dvc init` and `git init`, respectively.
 The `dvc stage add` commands are present in `commands.txt`. 
+Use `dvc dag` to visualise the DAG for the workflow.
 Run them individually to add stages and create the `dvc.yaml` file. 
 If any variable names are changed or the code is changed, refer to the `comments.txt` file and make corresponding changes before running them.
 
