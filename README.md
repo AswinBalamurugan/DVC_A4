@@ -12,7 +12,8 @@ The NCEI also provides archive services for much of the data collected by NOAA s
 * Compute R2 scores for the columns for each file.
 
 # Setup
-The `dvc stage add` commands are present in `comments.txt`. 
+Go to the working directory in the terminal/command prompt and initialise dvc and git using `dvc init` and `git init`, respectively.
+The `dvc stage add` commands are present in `commands.txt`. 
 Run them individually to add stages and create the `dvc.yaml` file. 
 If any variable names are changed or the code is changed, refer to the `comments.txt` file and make corresponding changes before running them.
 
